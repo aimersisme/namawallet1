@@ -466,7 +466,7 @@
         DUMMY_DATA.settings.APP_FOOTER_TEXT = "Developed by Terry Katar | iMersnesia.com";
 
         const CONFIG = {
-            API_URL: "https://script.google.com/macros/s/AKfycbwFUdCA859JeZEhVYv43_AOVQi4F8OsA4VU5yaoaTvs8zbYOFXXYvl4P7afPTCQbEL3sg/exec",
+            API_URL: "https://script.google.com/macros/s/AKfycbzOkk-jIMKJSljfgEPeXZjn39ew0zl8YA1Y4Bmi524pnqea3SJG3h6z7VID-UkdEWuM/exec",
             BOT_NUMBER: "628123456789"
         };
 
@@ -2135,7 +2135,7 @@
                         <!-- Chat Input Area -->
                         <div class="p-3 sm:p-4 bg-[#f0f2f5] z-10">
                             <div class="flex flex-wrap gap-2 mb-3 px-1">
-                                ${['makan 25rb pribadi', 'gaji 5jt bisnis', 'nabung 500rb tabungan', 'saldo'].map(text => `<button onclick="quickWalletChat('${text}')" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-full text-[10px] font-bold hover:bg-[#d9fdd3] hover:border-green-200 transition-all shadow-sm">${text}</button>`).join('')}
+                                ${['makan 25rb pribadi', 'gaji 5jt bisnis', 'saldo', 'batal', 'revisi 50rb'].map(text => `<button onclick="quickWalletChat('${text}')" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-full text-[10px] font-bold hover:bg-[#d9fdd3] hover:border-green-200 transition-all shadow-sm">${text}</button>`).join('')}
                             </div>
                             <div class="flex gap-2 sm:gap-3 items-center">
                                 <div class="flex-1 bg-white rounded-full flex items-center px-4 py-1 shadow-sm border border-slate-200">
@@ -2163,12 +2163,25 @@
         }
 
         function localWalletChatParser(text) {
-            const msg = String(text || '').toLowerCase();
+            const msg = String(text || '').toLowerCase().trim();
             if (msg === 'saldo' || msg.includes('cek saldo')) {
                 return { type: 'command', reply: `Total saldo aktif: ${formatIDR(state.data.stats.balance || 0)}` };
             }
+            if (msg === 'batal') {
+                return { type: 'command', reply: `🗑️ Membatalkan transaksi terakhir... (Tunggu sinkronisasi)` };
+            }
+            if (msg.startsWith('revisi')) {
+                const revMatch = msg.match(/revisi\s+(\d+)\s*(rb|ribu|jt|juta|k)?/i);
+                if (!revMatch) return { type: 'unknown', reply: '⚠️ Format revisi salah. Contoh: revisi 50000 atau revisi 50rb' };
+                let newAmt = parseInt(revMatch[1], 10);
+                const rUnit = (revMatch[2] || '').toLowerCase();
+                if (['rb', 'ribu', 'k'].includes(rUnit)) newAmt *= 1000;
+                if (['jt', 'juta'].includes(rUnit)) newAmt *= 1000000;
+                return { type: 'command', reply: `✏️ Memproses revisi nominal ke Rp${formatIDR(newAmt).replace('Rp', '')}... (Tunggu sinkronisasi)` };
+            }
+
             const amountMatch = msg.match(/(\d+)\s*(rb|ribu|jt|juta|k)?/i);
-            if (!amountMatch) return { type: 'unknown', reply: 'Format belum dikenali. Contoh: makan 25rb pribadi, gaji 5jt bisnis, atau saldo.' };
+            if (!amountMatch) return { type: 'unknown', reply: 'Format belum dikenali. Contoh: makan 25rb pribadi, gaji 5jt bisnis, saldo, batal, atau revisi 50rb.' };
             let amount = parseInt(amountMatch[1], 10);
             const unit = (amountMatch[2] || '').toLowerCase();
             if (['rb', 'ribu', 'k'].includes(unit)) amount *= 1000;
@@ -2229,7 +2242,12 @@
                 const params = new URLSearchParams({ action: 'walletChat', message });
                 fetchWithTimeout(`${CONFIG.API_URL}?${params.toString()}`).then(async (res) => {
                     const data = await res.json();
-                    if (!data || data.status !== 'success') console.warn('Background sync warning');
+                    if (!data || data.status !== 'success') {
+                        console.warn('Background sync warning');
+                    } else {
+                        // Sinkron ulang agar perubahan (seperti batal & revisi) langsung terupdate di grafik & history
+                        fetchDashboardData();
+                    }
                 }).catch(e => console.warn('Sync error', e));
             } catch (err) {
                 console.error("Gagal sinkron backend", err);
