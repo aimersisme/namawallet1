@@ -466,7 +466,7 @@
         DUMMY_DATA.settings.APP_FOOTER_TEXT = "Developed by Terry Katar | iMersnesia.com";
 
         const CONFIG = {
-            API_URL: "https://script.google.com/macros/s/AKfycbzOkk-jIMKJSljfgEPeXZjn39ew0zl8YA1Y4Bmi524pnqea3SJG3h6z7VID-UkdEWuM/exec",
+            API_URL: "https://script.google.com/macros/s/AKfycbyJKIOP8ZkJgnxPw35XwhX6wP5uOKNPKX-C2JYzqtaNcyO6hZkGlcWawZmcG-YNemQltg/exec",
             BOT_NUMBER: "628123456789"
         };
 
@@ -493,10 +493,7 @@
             "Sedikit demi sedikit lama-lama menjadi bukit. Konsistensi adalah kunci."
         ];
 
-        function getRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * QUOTES.length);
-            return QUOTES[randomIndex];
-        }
+        function getRandomQuote() { return QUOTES[Math.floor(Math.random() * QUOTES.length)]; }
 
         function showToast(message, type = "success") {
             const toast = document.getElementById('toast');
@@ -514,9 +511,7 @@
             
             lucide.createIcons();
             toast.classList.remove('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('translate-y-[-100px]', 'opacity-0', 'pointer-events-none'); }, 3000);
         }
 
         let state = {
@@ -545,13 +540,8 @@
             return ["true", "1", "yes", "ya", "on", "aktif", "active"].includes(String(value).toLowerCase());
         }
 
-        function getAllWallets() {
-            return Array.isArray(state.data.wallets) && state.data.wallets.length ? state.data.wallets : (DUMMY_DATA.wallets || []);
-        }
-
-        function getAllCategories() {
-            return Array.isArray(state.data.categories) && state.data.categories.length ? state.data.categories : (DUMMY_DATA.categories || []);
-        }
+        function getAllWallets() { return Array.isArray(state.data.wallets) && state.data.wallets.length ? state.data.wallets : (DUMMY_DATA.wallets || []); }
+        function getAllCategories() { return Array.isArray(state.data.categories) && state.data.categories.length ? state.data.categories : (DUMMY_DATA.categories || []); }
 
         function categoryOptionsHtml(selected = "", typeFilter = null) {
             let cats = getAllCategories();
@@ -595,21 +585,12 @@
         function getBudgetList() {
             if (Array.isArray(state.data.budgetList)) return state.data.budgetList;
             return Object.keys(state.data.budgets || {}).map(cat => ({
-                phone: "",
-                wallet: getDefaultWalletName(),
-                category: cat,
-                monthlyLimit: state.data.budgets[cat],
-                active: true
+                phone: "", wallet: getDefaultWalletName(), category: cat, monthlyLimit: state.data.budgets[cat], active: true
             }));
         }
 
-        function isBudgetEnabledUI() {
-            return truthy(state.data.settings?.ENABLE_BUDGET, true);
-        }
-
-        function getFooterText() {
-            return state.data.settings?.APP_FOOTER_TEXT || "Developed by Terry Katar | iMersnesia.com";
-        }
+        function isBudgetEnabledUI() { return truthy(state.data.settings?.ENABLE_BUDGET, true); }
+        function getFooterText() { return state.data.settings?.APP_FOOTER_TEXT || "Developed by Terry Katar | iMersnesia.com"; }
 
         function updateFooterInUI() {
             const footer = document.getElementById("sidebar-footer-text");
@@ -634,19 +615,15 @@
             if (window.lucide) lucide.createIcons();
         }
 
-        // FUNGSI BARU UNTUK MERUBAH TEKS "IMERSWALLET" MENJADI DINAMIS
         function updateBrandingTextUI() {
             const appName = state.data.settings?.App_Name || "iMersWallet";
             
-            // Ubah Title Website (Di atas tab browser)
             const pageTitle = document.getElementById('app-page-title');
             if (pageTitle) pageTitle.innerText = `${appName} - Asisten Keuangan Pribadi & Bisnis`;
 
-            // Ubah tulisan utama di Lockscreen PIN
             const lockscreenBrand = document.getElementById('app-brand-lockscreen');
             if (lockscreenBrand) lockscreenBrand.innerText = appName.toUpperCase();
 
-            // Ubah tulisan utama di Sidebar Kiri
             const sidebarBrand = document.getElementById('app-brand-sidebar');
             if (sidebarBrand) sidebarBrand.innerText = appName;
         }
@@ -667,16 +644,10 @@
             if (logoUrl && logoUrl.trim() !== "" && logoUrl.startsWith("http")) {
                 return `
                     <div class="relative ${sizeClass} mx-auto flex items-center justify-center logo-transparent-wrap">
-                        <img 
-                            src="${logoUrl}" 
-                            class="logo-transparent-img ${isLockscreenLogo ? 'scale-[1.35]' : 'scale-[1.08]'}" 
-                            alt="Logo iMersWallet" 
-                            onerror="handleLogoError(this, '${sizeClass}', '${iconSize}')"
-                        >
+                        <img src="${logoUrl}" class="logo-transparent-img ${isLockscreenLogo ? 'scale-[1.35]' : 'scale-[1.08]'}" alt="Logo iMersWallet" onerror="handleLogoError(this, '${sizeClass}', '${iconSize}')">
                     </div>
                 `;
             }
-
             return `<div class="${sizeClass} mx-auto bg-gradient-to-br from-dana to-dana-dark rounded-[18px] flex items-center justify-center text-white shadow-lg shadow-blue-200"><i data-lucide="wallet" class="${iconSize}"></i></div>`;
         }
 
@@ -695,14 +666,12 @@
             const lockscreenContainer = document.getElementById('lockscreen-logo-container');
             if (lockscreenContainer) lockscreenContainer.innerHTML = renderLogo("w-16 h-16 sm:w-20 sm:h-20", "w-8 h-8 sm:w-10 sm:h-10");
             
-            if(window.lucide) {
-                lucide.createIcons();
-            }
+            if(window.lucide) { lucide.createIcons(); }
         }
 
         function focusPinInput() {
             const input = document.getElementById('real-pin-input');
-            if (input) {
+            if (input && !input.disabled) {
                 input.focus();
             }
         }
@@ -730,14 +699,7 @@
 
         function updatePinIndicators() {
             const dots = document.querySelectorAll('#pin-dots div');
-            const colorfulClasses = [
-                'bg-[#108EE9] shadow-[#108EE9]/50',
-                'bg-[#8B5CF6] shadow-[#8B5CF6]/50',
-                'bg-[#F43F5E] shadow-[#F43F5E]/50',
-                'bg-[#F59E0B] shadow-[#F59E0B]/50',
-                'bg-[#10B981] shadow-[#10B981]/50',
-                'bg-[#06B6D4] shadow-[#06B6D4]/50' 
-            ];
+            const colorfulClasses = ['bg-[#108EE9] shadow-[#108EE9]/50', 'bg-[#8B5CF6] shadow-[#8B5CF6]/50', 'bg-[#F43F5E] shadow-[#F43F5E]/50', 'bg-[#F59E0B] shadow-[#F59E0B]/50', 'bg-[#10B981] shadow-[#10B981]/50', 'bg-[#06B6D4] shadow-[#06B6D4]/50'];
 
             dots.forEach((dot, index) => {
                 if (index < state.enteredPin.length) {
@@ -771,9 +733,7 @@
             }
         }
 
-        function clearPin() {
-            handlePinInput("");
-        }
+        function clearPin() { handlePinInput(""); }
 
         function backspacePin() {
             if (state.enteredPin.length > 0) {
@@ -910,17 +870,14 @@
         function applyBrandingSettings(settings = {}) {
             if (!settings) return;
             
-            // TANGKAP App_Name DARI GOOGLE SHEET
             if (settings.App_Name) {
                 state.data.settings.App_Name = String(settings.App_Name).trim();
                 try { localStorage.setItem('imerswallet_app_name', state.data.settings.App_Name); } catch (e) {}
             }
-
             if (settings.WA_GATEWAY) {
                 state.data.settings.WA_GATEWAY = String(settings.WA_GATEWAY).trim();
                 try { localStorage.setItem('imerswallet_wa_gateway', state.data.settings.WA_GATEWAY); } catch (e) {}
             }
-
             if (settings.APP_LOGO && String(settings.APP_LOGO).trim() !== "") {
                 state.data.settings.APP_LOGO = String(settings.APP_LOGO).trim();
                 try { localStorage.setItem('imerswallet_app_logo', state.data.settings.APP_LOGO); } catch (e) {}
@@ -936,18 +893,16 @@
             
             updateLogosInUI();
             updateFooterInUI();
-            updateBrandingTextUI(); // Panggil fungsi update nama dinamis
-            updateBotLink(); // Panggil fungsi update link bot
+            updateBrandingTextUI();
+            updateBotLink(); 
         }
 
         function hydrateCachedBranding() {
             try {
                 const cachedAppName = localStorage.getItem('imerswallet_app_name');
                 if (cachedAppName) state.data.settings.App_Name = cachedAppName;
-
                 const cachedGateway = localStorage.getItem('imerswallet_wa_gateway');
                 if (cachedGateway) state.data.settings.WA_GATEWAY = cachedGateway;
-
                 const cachedLogo = localStorage.getItem('imerswallet_app_logo');
                 const cachedBotNumber = localStorage.getItem('imerswallet_bot_number');
                 if (cachedLogo) state.data.settings.APP_LOGO = cachedLogo;
@@ -958,8 +913,8 @@
             
             updateLogosInUI();
             updateFooterInUI();
-            updateBrandingTextUI(); // Panggil fungsi update nama dinamis
-            updateBotLink(); // Panggil fungsi update link bot
+            updateBrandingTextUI();
+            updateBotLink(); 
         }
 
         async function preloadBrandingBeforePin() {
@@ -991,7 +946,6 @@
 
                 if (result.debts) state.data.debts = result.debts;
                 if (result.debtPayments) state.data.debtPayments = result.debtPayments;
-                
                 if (result.categories) state.data.categories = result.categories;
 
                 state.data = result;
@@ -1018,7 +972,6 @@
             }
         }
 
-        // --- SISTEM MENU POP-UP UNTUK HP ---
         function openMobileMenu() {
             const overlay = document.getElementById('mobile-menu-overlay');
             const sheet = document.getElementById('mobile-menu-sheet');
@@ -1039,7 +992,6 @@
             }, 300);
         }
 
-        // --- SISTEM ROUTING DAN NAVIGASI ---
         function routerAndCloseMenu(view) {
             closeMobileMenu();
             router(view);
@@ -1112,7 +1064,6 @@
             updateBrandingTextUI();
         }
 
-        // --- FUNGSI INIT CHART ---
         function initYearlyChart() {
             const el = document.querySelector("#chart-yearly");
             if (!el) return;
@@ -1150,7 +1101,6 @@
             new ApexCharts(el, options).render();
         }
 
-        // --- DASHBOARD VIEW ---
         const DashboardView = () => {
             const stats = state.data.stats;
             const activeWallets = getActiveWallets();
@@ -1388,7 +1338,6 @@
             `;
         };
 
-        // --- HISTORY VIEW ---
         const HistoryView = () => `
             <div class="max-w-6xl mx-auto p-4 lg:p-10 space-y-8 animate-fade pb-10">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
@@ -1455,7 +1404,6 @@
             </div>
         `;
 
-        // --- ANALYTICS VIEW ---
         const AnalyticsView = () => `
             <div class="max-w-6xl mx-auto p-4 lg:p-10 space-y-8 animate-fade pb-10">
                 <div>
@@ -1487,7 +1435,6 @@
             </div>
         `;
 
-        // --- WALLET DEBT VIEW ---
         const WalletDebtView = () => {
             const debts = state.data.debts || [];
             const debtPayments = state.data.debtPayments || [];
@@ -1611,7 +1558,6 @@
             `;
         };
 
-        // --- KATEGORI DINAMIS VIEW ---
         const CategoriesView = () => {
             const categories = Array.isArray(state.data.categories) ? state.data.categories : [];
             return `
@@ -1666,7 +1612,6 @@
             `;
         };
 
-        // --- USERS & ACCESS VIEW ---
         const UsersView = () => {
             const users = Array.isArray(state.data.users) ? state.data.users : [];
             return `
@@ -1729,7 +1674,6 @@
             `;
         };
 
-        // --- PROFILE / SETTINGS VIEW ---
         const ProfileView = () => {
             const settings = state.data.settings || {};
             const footerText = settings.APP_FOOTER_TEXT || "Developed by Terry Katar | iMersnesia.com";
@@ -2093,7 +2037,62 @@
             `;
         }
 
-        // --- WALLET CHAT VIEW ---
+        function generateWalletReportUI() {
+            const wallet = document.getElementById('report-wallet').value;
+            const month = document.getElementById('report-month').value;
+            const year = document.getElementById('report-year').value;
+            
+            showToast("Memproses laporan...", "success");
+            setTimeout(() => {
+                state.walletReport = buildLocalWalletReport(wallet, month, year);
+                render();
+            }, 300);
+        }
+
+        function printWalletReportUI() {
+            if (!state.walletReport) {
+                generateWalletReportUI();
+                return;
+            }
+            const report = state.walletReport;
+            const win = window.open('', '_blank');
+            if (!win) return showToast('Popup diblokir browser. Izinkan popup lalu coba lagi.', 'warn');
+            const rows = (report.transactions || []).map(t => `
+                <tr><td>${safeHtml(t.date)}</td><td>${safeHtml(t.walletLabel || getWalletLabel(t.wallet))}</td><td>${safeHtml(t.category)}</td><td>${safeHtml(t.note || '-')}</td><td style="text-align:right;color:${t.type === 'income' ? '#10B981' : '#F43F5E'};font-weight:700;">${t.type === 'income' ? '+' : '-'}${formatIDR(t.amount)}</td></tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:18px;">Tidak ada transaksi.</td></tr>';
+            const incomeRows = (report.incomeByCategory || []).map(r => `<tr><td>${safeHtml(r.category)}</td><td style="text-align:right;color:#10B981;font-weight:700;">${formatIDR(r.total)}</td></tr>`).join('') || '<tr><td colspan="2">Belum ada pemasukan</td></tr>';
+            const expenseRows = (report.expenseByCategory || []).map(r => `<tr><td>${safeHtml(r.category)}</td><td style="text-align:right;color:#F43F5E;font-weight:700;">${formatIDR(r.total)}</td></tr>`).join('') || '<tr><td colspan="2">Belum ada pengeluaran</td></tr>';
+            win.document.write(`
+                <html><head><title>Wallet Report ${safeHtml(report.periodLabel)}</title><style>
+                    body{font-family:Arial,sans-serif;color:#1e293b;padding:24px}.wrap{max-width:820px;margin:auto}.head{border-bottom:3px solid #108EE9;padding-bottom:14px;margin-bottom:18px;display:flex;justify-content:space-between}.brand{font-size:26px;font-weight:900;color:#108EE9}.muted{color:#64748b;font-size:12px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.card{border:1px solid #e2e8f0;border-radius:14px;padding:14px;background:#f8fafc}.label{font-size:10px;color:#64748b;text-transform:uppercase;font-weight:800}.val{font-size:20px;font-weight:900;margin-top:6px}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#f8fafc;color:#64748b;text-align:left}th,td{padding:9px;border-bottom:1px solid #e2e8f0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.notes{background:#eef6ff;border:1px solid #bfdbfe;border-radius:14px;padding:14px;margin:18px 0}@media print{button{display:none}.wrap{max-width:none}}
+                </style></head><body><div class="wrap">
+                    <div class="head"><div><div class="brand">iMersWallet</div><div class="muted">Wallet Report</div></div><div style="text-align:right"><b>${safeHtml(report.walletLabel)}</b><br><span class="muted">${safeHtml(report.periodLabel)}<br>Generated: ${safeHtml(report.generatedAt || '')}</span></div></div>
+                    <button onclick="window.print()" style="padding:12px 18px;border:0;background:#108EE9;color:white;border-radius:12px;font-weight:800;margin-bottom:14px;">Print / Save PDF</button>
+                    <div class="cards"><div class="card"><div class="label">Income</div><div class="val" style="color:#10B981">${formatIDR(report.summary.income)}</div></div><div class="card"><div class="label">Expense</div><div class="val" style="color:#F43F5E">${formatIDR(report.summary.expense)}</div></div><div class="card"><div class="label">Balance</div><div class="val" style="color:#108EE9">${formatIDR(report.summary.balance)}</div></div></div>
+                    <div class="grid"><div><h3>Breakdown Pemasukan</h3><table>${incomeRows}</table></div><div><h3>Breakdown Pengeluaran</h3><table>${expenseRows}</table></div></div>
+                    <div class="notes"><b>Report Notes</b><ul>${(report.notes || []).map(n => `<li>${safeHtml(n)}</li>`).join('')}</ul></div>
+                    <h3>Detail Transaksi</h3><table><thead><tr><th>Tanggal</th><th>Wallet</th><th>Kategori</th><th>Catatan</th><th style="text-align:right">Nominal</th></tr></thead><tbody>${rows}</tbody></table>
+                </div></body></html>
+            `);
+            win.document.close();
+        }
+
+        async function emailWalletReportUI() {
+            const wallet = document.getElementById('report-wallet')?.value || state.walletReport?.wallet || 'all';
+            const month = document.getElementById('report-month')?.value || state.walletReport?.month || (new Date().getMonth() + 1);
+            const year = document.getElementById('report-year')?.value || state.walletReport?.year || new Date().getFullYear();
+            const params = new URLSearchParams({ action: 'emailWalletReport', wallet, month, year, recipient_mode: 'admins' });
+            showToast('Mengirim Wallet Report PDF ke email admin...', 'success');
+            try {
+                const response = await fetchWithTimeout(`${CONFIG.API_URL}?${params.toString()}`);
+                const result = await response.json();
+                if (result && result.status === 'success') showToast('PDF Wallet Report berhasil dikirim!', 'success');
+                else throw new Error(result?.message || 'Gagal kirim email');
+            } catch (err) {
+                showToast('Gagal kirim email PDF. Cek Apps Script Logs & email admin.', 'warn');
+            }
+        }
+
         const WalletChatView = () => {
             const messages = state.walletChatMessages || [];
             return `
@@ -2165,19 +2164,31 @@
         function localWalletChatParser(text) {
             const msg = String(text || '').toLowerCase().trim();
             if (msg === 'saldo' || msg.includes('cek saldo')) {
-                return { type: 'command', reply: `Total saldo aktif: ${formatIDR(state.data.stats.balance || 0)}` };
+                return { type: 'command', reply: `💰 Total saldo aktif (Lokal): ${formatIDR(state.data.stats.balance || 0)}` };
             }
             if (msg === 'batal') {
-                return { type: 'command', reply: `🗑️ Membatalkan transaksi terakhir... (Tunggu sinkronisasi)` };
+                if (state.data.transactions.length > 0) {
+                    const lastTx = state.data.transactions[state.data.transactions.length - 1]; // Intip aja dulu, jangan di-pop, nanti di-pop di catch
+                    return { type: 'cancel', reply: `🗑️ *Transaksi Dibatalkan (Lokal)*\n\nBerhasil menghapus catatan terakhir Anda:\nKategori: ${lastTx.category}\nNominal: ${formatIDR(lastTx.amount)}` };
+                } else {
+                    return { type: 'error', reply: `⚠️ Tidak ditemukan catatan transaksi terakhir Anda untuk dibatalkan.` };
+                }
             }
             if (msg.startsWith('revisi')) {
                 const revMatch = msg.match(/revisi\s+(\d+)\s*(rb|ribu|jt|juta|k)?/i);
-                if (!revMatch) return { type: 'unknown', reply: '⚠️ Format revisi salah. Contoh: revisi 50000 atau revisi 50rb' };
+                if (!revMatch) return { type: 'error', reply: '⚠️ Format revisi salah. Contoh: revisi 50000 atau revisi 50rb' };
                 let newAmt = parseInt(revMatch[1], 10);
                 const rUnit = (revMatch[2] || '').toLowerCase();
                 if (['rb', 'ribu', 'k'].includes(rUnit)) newAmt *= 1000;
                 if (['jt', 'juta'].includes(rUnit)) newAmt *= 1000000;
-                return { type: 'command', reply: `✏️ Memproses revisi nominal ke Rp${formatIDR(newAmt).replace('Rp', '')}... (Tunggu sinkronisasi)` };
+                
+                if (state.data.transactions.length > 0) {
+                    const lastTx = state.data.transactions[state.data.transactions.length - 1];
+                    const oldAmt = lastTx.amount;
+                    return { type: 'revise', newAmt: newAmt, reply: `✏️ *Revisi Berhasil (Lokal)*\n\nTransaksi *${lastTx.category}* terakhir diperbarui:\nDari: ${formatIDR(oldAmt)}\nMenjadi: *${formatIDR(newAmt)}*` };
+                } else {
+                    return { type: 'error', reply: `⚠️ Tidak ditemukan catatan transaksi terakhir Anda untuk direvisi.` };
+                }
             }
 
             const amountMatch = msg.match(/(\d+)\s*(rb|ribu|jt|juta|k)?/i);
@@ -2212,46 +2223,71 @@
             // Kosongkan input
             if (input) input.value = '';
             
-            // 1. Langsung tampilkan pesan User (Optimistic UI)
+            // 1. Tampilkan pesan User
             pushWalletChatMessage('user', message);
             render();
+            scrollToBottomChat();
 
-            // 2. Langsung proses via LOKAL biar terasa Instan
-            const local = localWalletChatParser(message);
-            
-            if (local.type === 'transaction' && local.transaction) {
-                state.data.transactions.push(local.transaction);
-                // Update stats
+            // 2. Tampilkan Indikator Loading Bot
+            pushWalletChatMessage('bot', '⏳ Memproses permintaan...');
+            render();
+            scrollToBottomChat();
+
+            try {
+                // 3. Panggil API Backend (Tunggu sampai selesai)
+                const params = new URLSearchParams({ action: 'walletChat', message: message });
+                const response = await fetchWithTimeout(`${CONFIG.API_URL}?${params.toString()}`, { timeout: 15000 });
+                const data = await response.json();
+
+                // 4. Hapus pesan loading
+                state.walletChatMessages.pop(); 
+
+                if (data && data.status === 'success' && data.result) {
+                    // 5. Masukkan pesan ASLI dari server
+                    pushWalletChatMessage('bot', data.result.reply);
+                    
+                    // 6. Trigger pembaruan data jika itu transaksi / batal / revisi
+                    if (data.result.type === 'transaction' || message.toLowerCase() === 'batal' || message.toLowerCase().startsWith('revisi')) {
+                        await fetchDashboardData(); // Sinkronisasi ulang (Chart & Tabel langsung update)
+                    } else {
+                        render();
+                    }
+                } else {
+                    throw new Error("Gagal sinkron");
+                }
+            } catch (err) {
+                // Hapus pesan loading
+                state.walletChatMessages.pop();
+
+                // FALLBACK LOKAL (Jika Google Apps Script Offline/Error)
+                const local = localWalletChatParser(message);
+                
+                // Recalculate stats offline
+                if (local.type === 'transaction' && local.transaction) {
+                    state.data.transactions.push(local.transaction);
+                } else if (local.type === 'cancel') {
+                    state.data.transactions.pop();
+                } else if (local.type === 'revise' && local.newAmt) {
+                    state.data.transactions[state.data.transactions.length - 1].amount = local.newAmt;
+                }
+
                 const inc = state.data.transactions.filter(t => t.type === 'income').reduce((a, b) => a + Number(b.amount || 0), 0);
                 const exp = state.data.transactions.filter(t => t.type === 'expense').reduce((a, b) => a + Number(b.amount || 0), 0);
                 state.data.stats = { balance: inc - exp, income: inc, expense: exp };
+
+                pushWalletChatMessage('bot', local.reply + '\n\n*(Mode Offline/Lokal - Server Timeout)*');
+                render();
             }
-            
-            // 3. Langsung tampilkan balasan Bot saat itu juga
-            pushWalletChatMessage('bot', local.reply);
-            render();
-            
+
+            scrollToBottomChat();
+        }
+
+        function scrollToBottomChat() {
             setTimeout(() => {
                 const body = document.getElementById('wallet-chat-body');
                 if (body) body.scrollTop = body.scrollHeight;
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }, 50);
-
-            // 4. Proses Sinkronisasi ke Google Sheet diam-diam di background (Background Sync)
-            try {
-                const params = new URLSearchParams({ action: 'walletChat', message });
-                fetchWithTimeout(`${CONFIG.API_URL}?${params.toString()}`).then(async (res) => {
-                    const data = await res.json();
-                    if (!data || data.status !== 'success') {
-                        console.warn('Background sync warning');
-                    } else {
-                        // Sinkron ulang agar perubahan (seperti batal & revisi) langsung terupdate di grafik & history
-                        fetchDashboardData();
-                    }
-                }).catch(e => console.warn('Sync error', e));
-            } catch (err) {
-                console.error("Gagal sinkron backend", err);
-            }
         }
 
         function setSubTab(tab) {
@@ -2417,7 +2453,7 @@
             const userPhone = document.getElementById('report-user-phone')?.value || '';
             const email = document.getElementById('report-custom-email')?.value || '';
 
-            const params = new URLSearchParams({
+            const params = newSearchParams({
                 action: 'triggerReport',
                 period,
                 recipient_mode: mode,
@@ -2576,7 +2612,6 @@
             }
         }
 
-        // --- FUNGSI UPDATE KATEGORI DROPDOWN DINAMIS ---
         function updateCategoryDropdown(type) {
             const select = document.getElementById('tx-category');
             if(!select) return;
@@ -2604,7 +2639,6 @@
             updateCategoryDropdown(type);
         }
 
-        // Modal Form Builders
         function openModal(type, payload = {}) {
             const overlay = document.getElementById('modal-overlay');
             const box = document.getElementById('modal-box');
@@ -2829,7 +2863,6 @@
             }
         }
 
-        // --- FUNGSI CRUD KATEGORI ---
         function openCategoryModal(idx) {
             openModal('categoryForm', { idx });
         }
@@ -2967,7 +3000,6 @@
             }
         }
 
-        // Logic Functions Lainnya
         async function submitDebt() {
             const name = document.getElementById('debt-name').value;
             const type = document.getElementById('debt-type').value;
@@ -3000,7 +3032,6 @@
                     fetchDashboardData();
                 } else throw new Error(result?.message || "Gagal");
             } catch (err) {
-                // Fallback Lokal
                 const newId = state.data.debts.length ? Math.max(...state.data.debts.map(d=>d.id)) + 1 : 1;
                 state.data.debts.push({
                     id: newId, name, type, date, dueDate, total: Number(total), paid: 0, installment: Number(installment||0)
@@ -3038,7 +3069,6 @@
                     fetchDashboardData();
                 } else throw new Error(result?.message || "Gagal");
             } catch (err) {
-                // Fallback Lokal
                 const newPId = state.data.debtPayments.length ? Math.max(...state.data.debtPayments.map(p=>p.id)) + 1 : 1;
                 state.data.debtPayments.push({
                     id: newPId, debtId: Number(debtId), date, note, amount: Number(amount)
